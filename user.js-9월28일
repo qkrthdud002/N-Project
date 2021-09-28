@@ -1,0 +1,66 @@
+var express = require('express');
+const dbcp = require('../model/dbcp');
+var router = express.Router();
+
+/* GET users listing. */
+router.get('/', async function(req, res, next) {
+  const conn = await dbcp.getConnection();
+  const rows = await conn.query('select * from user');
+  conn.end();
+  res.render('users', {users:rows});
+});
+
+router.get('/login', (req, res)=>{
+  res.render('login');
+});
+
+router.post('/login', async (req, res)=>{
+  const {userId, password} = req.body;
+  let result='';
+  const conn = await dbcp.getConnection();
+  const rows = await conn.query(
+    'select userId, password from user where userId=?',
+    [userId]
+  );
+  //console.log(rows);
+  conn.end();
+
+  if(rows.length==0){
+    result='등록되지 않은 사용자입니다.';
+  }
+  else{
+    const db_user=rows[0];
+    if(db_user.password == password){
+      req.session.userId = userId; //req.session.______빈 곳은 내가 쓰고 싶은 거 쓰는 것
+      result='반갑습니다.';
+    }
+    else
+      result='비밀번호 오류입니다.';
+  }
+ //console.log(userId);
+ //console.log(password);
+  res.render('login', {result:result});
+});
+
+router.get('/logout', (req, res)=>{
+  req.session.destroy((err)=>{
+    res.redirect('/');
+  });
+});
+//회원가입 폼 출력
+router.get('/register', (req, res)=>{
+  res.render('register');
+});
+//DB에 사용자 추가. session에 추가 후
+//메인 페이지로 이동
+router.post('/register', async (req, res)=>{
+  const {userId, name, password}=req.body;
+  const conn = await dbcp.getConnection();
+  let sql='insert into user (userId, name, password) '
+  sql+='values(?, ?, ?)'
+  const rows = await conn.query(sql, [userId, name, password])
+  conn.end();
+  req.session.userId=userId;
+  res.redirect('/');
+});
+module.exports = router;
