@@ -1,0 +1,42 @@
+//error.pug
+extends layout
+
+block content
+  h1= message
+  h2= error.status
+  pre #{error.stack}
+
+
+//layout.pug
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='/stylesheets/style.css')
+  body
+    h1 할래말래
+    ul 
+      li 
+        a(href='/') HOME 
+      li 
+        a(href='/users') USERS 
+      li 
+        a(href='/users/login') LOGIN
+      li
+        a(href='/users/logout') LOGOUT
+      li 
+        a(href='/users/register') Register
+    block content
+
+
+
+//login.pug
+extends layout 
+
+block content
+    h1 Login 
+    form(action='/users/login', method='post')
+        input(type='text', name='userId')
+        input(type='password', name='password')
+        input(type='submit', value='로그인')
+    p= result
