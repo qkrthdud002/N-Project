@@ -12,3 +12,14 @@ router.get('/', async function(req, res, next) {
 });
 
 module.exports = router;
+
+
+
+
+//index.pug
+extends layout
+
+block content
+  h1= title
+  h1= userId
+  p Welcome to #{title}
