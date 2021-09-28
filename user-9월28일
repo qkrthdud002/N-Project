@@ -64,3 +64,19 @@ router.post('/register', async (req, res)=>{
   res.redirect('/');
 });
 module.exports = router;
+
+
+
+
+
+
+
+
+//user.pug
+extends layout 
+
+block content
+    h1 Users
+    ul
+        each user in users
+            li #{user.userId}, #{user.name}
