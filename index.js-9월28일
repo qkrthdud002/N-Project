@@ -1,0 +1,14 @@
+var express = require('express');
+const dbcp = require('../model/dbcp');
+
+var router = express.Router();
+
+/* GET home page. */
+router.get('/', async function(req, res, next) {
+  const userId = req.session.userId;
+  const array=['abc', 'def', 'ghi'];
+  res.render('index', {title: 'Express',
+    array:array, userId:userId});
+});
+
+module.exports = router;
